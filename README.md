@@ -60,9 +60,18 @@ screenshots must not be described as successful runs of the original EcoModder.
 
 ### GitHub Pages (independent of the application server)
 
-`.github/workflows/pages.yml` runs the numerical tests, then publishes only
-`public/` to GitHub Pages on each push to `main`. Pull requests run tests without
-deploying. No dependencies, build, server, secrets or API keys are required.
+GitHub Pages publishes the root of the separate `gh-pages` branch, containing
+only `public/`. No custom Actions workflow or extra account permissions are needed.
+After changing the calculator, test and publish from the local repository:
+
+```sh
+npm test
+git push origin main
+git subtree push --prefix public origin gh-pages
+```
+
+The main branch stores the complete source and tests; `gh-pages` stores the site.
+No dependencies, build, server, secrets or API keys are required.
 All asset/module links are relative, so the `/ecomoddercalc/` project path works.
 The original hostname remains on its existing server; no DNS change is needed.
 Pages uses GitHub's hosting and TLS, not the nginx configuration in `deploy/`.
