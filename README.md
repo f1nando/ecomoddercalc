@@ -78,6 +78,11 @@ Pages uses GitHub's hosting and TLS, not the nginx configuration in `deploy/`.
 The nginx-specific security headers are not configurable on standard Pages;
 they should not be assumed to be present on the GitHub-hosted address.
 
+Published and checked on 2026-10-27: GitHub Pages build/deployment succeeded,
+13/13 local numerical tests and 10/10 live Pages browser checks passed (including
+the project subpath, CSV, PDF and 320px/390px layouts). No calculation-code change
+was needed for Pages. The existing server-hosted site was left unchanged.
+
 ### Separate nginx hosting
 
 Published 2026-10-27: **https://ecomoddercalc.demotest.live**, SSH alias `bkserv`.
