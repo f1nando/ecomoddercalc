@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Расчёт сопротивления движению, мощности двигателя и расхода топлива прямо в браузере.">
+  <meta name="color-scheme" content="light"><meta name="referrer" content="no-referrer">
+  <title>EcoModderCalc — мощность автомобиля</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<header><div><h1>EcoModderCalc</h1><p>Мощность автомобиля · расчёт в браузере</p></div><button id="print" type="button" disabled>Печать / PDF</button></header>
+<main>
+  <form id="calculator">
+    <h2>Исходные данные</h2>
+    <label class="wide">Вариант из задания<select id="preset" name="preset"></select></label>
+    <label class="wide">Профиль расчёта<select id="profile" name="profile"><option value="eco">EcoModder · ρ = 1,225 · g = 9,80665</option><option value="vehicle">Vehicle Physics · ρ = 1,184 · g = 9,81</option></select></label>
+    <div class="fields">
+      <label>Масса, кг<input name="mass" type="number" value="20000" min="1" max="100000" step="any" required></label>
+      <label>Коэффициент кочения<input name="crr" type="number" value="0.012" min="0" max="0.5" step="any" required></label>
+      <label>Коэффициент Cd<input name="cd" type="number" value="0.64" min="0" max="3" step="any" required></label>
+      <label>Лобовая площадь A, м²<input name="area" type="number" value="8.5" min="0.01" max="50" step="any" required></label>
+      <label>КПД трансмиссии, %<input name="efficiency" type="number" value="90" min="1" max="100" step="any" required></label>
+      <label>Плотность воздуха, кг/м³<input name="rho" type="number" value="1.225" min="0.1" max="2" step="any" required></label>
+      <label>Подъём дороги, %<input name="grade" type="number" value="0" min="0" max="100" step="any" required></label>
+      <label>Встречный ветер, км/ч<input name="wind" type="number" value="0" min="0" max="200" step="any" required></label>
+    </div>
+    <label class="wide">Скорости, км/ч — через «;»<input id="speeds" name="speeds" type="text" value="0; 16; 32; 48; 64; 80; 97; 100" maxlength="1000" required></label>
+    <details id="fuel-settings"><summary>Оценка расхода топлива</summary><div class="fields">
+      <label>Тепловой КПД двигателя, %<input name="engineEfficiency" type="number" value="40" min="1" max="100" step="any" required></label>
+      <label>Энергия топлива, Вт·ч/US gal<input name="fuelWh" type="number" value="37953" min="1" max="100000" step="any" required></label>
+      <label>Потребители на валу, Вт<input name="auxiliary" type="number" value="0" min="0" max="100000" step="any" required></label>
+    </div><p class="muted">40% и 37 953 Вт·ч/US gal — условные параметры дизельного примера, не паспортные данные автомобиля. Нулевая скорость: л/100 км не определяется.</p></details>
+    <button class="primary" type="submit">Рассчитать</button>
+    <p id="error" role="alert" hidden></p>
+  </form>
+  <section id="results" aria-labelledby="results-title">
+    <div class="section-head"><h2 id="results-title">Результаты</h2><button id="csv" type="button" disabled>CSV</button></div>
+    <p id="run-summary" aria-live="polite">Для расчёта необходим JavaScript.</p>
+    <p id="run-inputs" class="muted"></p>
+    <div class="metrics"><div><span>Эффективная площадь Cd·A</span><strong id="cda">—</strong></div><div><span id="max-label">Мощность двигателя</span><strong id="max-power">—</strong></div></div>
+    <figure><svg id="chart" viewBox="0 0 760 360" role="img" aria-label="Зависимость мощности двигателя и мощности на колёсах от скорости"></svg><figcaption><span class="engine-key">Двигатель</span><span class="wheel-key">Колёса</span> · кВт</figcaption></figure>
+    <div class="table-wrap" tabindex="0" role="region" aria-label="Таблица расчётов, возможна горизонтальная прокрутка"><table><thead><tr><th scope="col">Скорость<br>км/ч</th><th scope="col">Кочение<br>Н</th><th scope="col">Воздух<br>Н</th><th scope="col">Подъём<br>Н</th><th scope="col">Колёса<br>кВт</th><th scope="col">Двигатель<br>кВт</th><th scope="col">Расход*<br>л/100 км</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="muted">* Условная оценка при заданных тепловом КПД и энергии топлива. Не измеренный расход и не WLTP. При расчёте мощность не округляется; в таблице показано 3 знака.</p>
+    <details><summary>Формулы и допущения</summary><div class="formulas"><p>v = V / 3,6; α = arctan(уклон / 100)</p><p>Fкоч = mgf cos α; Fпод = mg sin α</p><p>Fвозд = ½ρCdA(v + vветра)²</p><p>Nкол = (Fкоч + Fпод + Fвозд)v / 1000</p><p>Nдв = Nкол / ηтр + Nпотребителей</p><p>Равномерное движение, без ускорения. Поддерживаются горизонтальная дорога и подъём. 30° — это 57,735% уклона, не 30%. Профиль задаёт стандартные ρ и g; плотность можно изменить вручную.</p></div></details>
+  </section>
+</main>
+<footer><p><strong>Независимая реализация, не оригинальный EcoModder.com.</strong> Код и оформление созданы заново. В отчётах указывайте EcoModderCalc как использованный инструмент.</p><p>Формулы: <a href="https://web.archive.org/web/20260618042557/https://www.ecomodder.com/forum/tool-aero-rolling-resistance.php" target="_blank" rel="noopener noreferrer">архив EcoModder</a> · <a href="https://www.electromotive.eu/?page_id=12" target="_blank" rel="noopener noreferrer">Vehicle Physics</a>. Все вычисления локальны: нет учётной записи, аналитики или передачи введённых данных на сервер.</p></footer>
+<noscript><p>Включите JavaScript, чтобы выполнять расчёты. Сервер вычисления не выполняет.</p></noscript>
+</body></html>

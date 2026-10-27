@@ -1,0 +1,17 @@
+export const PRESETS = Object.freeze([
+  [1,'VW Golf VIII',1350,85,.29,2.17],[2,'Audi A4',1500,86,.27,2.20],
+  [3,'BMW 3 Series',1550,86,.28,2.22],[4,'Mercedes C-Class',1600,85,.26,2.25],
+  [5,'Opel Astra',1400,84,.30,2.15],[6,'Renault Megane',1420,84,.31,2.18],
+  [7,'Peugeot 308',1380,84,.29,2.16],[8,'Skoda Octavia',1450,85,.28,2.20],
+  [9,'Fiat Tipo',1320,83,.32,2.12],[10,'Volvo S60',1650,85,.27,2.30],
+  [11,'MAN TGS',18000,90,.65,8.0],[12,'Mercedes Actros',19000,91,.63,8.2],
+  [13,'Volvo FH16',20000,90,.64,8.5],[14,'Scania R-Series',19500,90,.62,8.3],
+  [15,'DAF XF',18800,89,.61,8.1],[16,'Iveco Stralis',18500,89,.63,8.0],
+  [17,'Renault T-Series',19200,90,.62,8.4],[18,'Setra S 516 HD',13000,88,.55,7.5],
+  [19,'Mercedes eCitaro',12500,87,.58,7.2],[20,'MAN Lion’s Coach',12800,88,.56,7.4],
+  [21,'VDL Futura',12900,87,.57,7.3],[22,'Iveco Crossway',11800,86,.59,7.0],
+  [23,'Irizar i6',12700,87,.56,7.2],[24,'Van Hool TDX18',14000,88,.60,7.8],
+  [25,'Setra S 531 DT',14500,88,.59,8.0],[26,'Mercedes Citaro G',18000,87,.61,8.2],
+  [27,'MAN Lion’s City 18',18100,87,.62,8.1],[28,'VDL Citea SLFA-180',18000,87,.63,8.0],
+  [29,'Iveco Urbanway 18',17900,86,.62,8.0],[30,'Volvo 9700',13200,88,.57,7.6],
+].map(([id,name,mass,efficiency,cd,area])=>Object.freeze({id,name,mass,efficiency,cd,area})));
